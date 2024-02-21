@@ -1,0 +1,11 @@
+- hosts:
+   - '{{ targets }}:&servers'
+  roles:
+    - tls_server
+- hosts:
+   - '{{ targets }}:&clients'
+  roles:
+    - other
+- hosts: dynamic_tls_clients
+  roles:
+    - tls_client

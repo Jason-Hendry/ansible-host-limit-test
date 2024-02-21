@@ -1,0 +1,28 @@
+- name: "random string in file"
+  ansible.builtin.lineinfile:
+    path: /tmp/random.txt
+    line: "{{ lookup('password', '/dev/null length=8') }}"
+    create: yes
+
+- name: "read file"
+  ansible.builtin.shell: cat /tmp/random.txt
+  register: random_string
+  changed_when: false
+
+- name: "Show random string"
+  ansible.builtin.debug:
+    var: random_string.stdout
+
+- name: "Set random_string as fact for each client"
+  ansible.builtin.set_fact:
+    random_string: "{{ random_string.stdout }}"
+  delegate_to: '{{item}}'
+  delegate_facts: true
+  loop: "{{ groups['clients'] }}"
+
+- name: "Add clients to dynamic inventory"
+  ansible.builtin.add_host:
+    name: "{{ item }}"
+    groups: "dynamic_tls_clients"
+  loop: "{{ groups['clients'] }}"
+

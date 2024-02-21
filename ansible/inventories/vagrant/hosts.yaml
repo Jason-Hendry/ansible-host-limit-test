@@ -1,0 +1,8 @@
+servers:
+  hosts:
+    server1:
+      ansible_host: 192.168.58.101
+clients:
+  hosts:
+    client1:
+      ansible_host: 192.168.58.102
